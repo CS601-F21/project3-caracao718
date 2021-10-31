@@ -4,14 +4,11 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import search.Request;
 
 
 public class HTTPServer {
@@ -46,13 +43,7 @@ public class HTTPServer {
     public void addMapping(String path, Handler handler) {
         // should there be a field to store path?
         // since the server must be flexible enough to support different web apps, we cannot do something like:
-        if (path.equals("/reviewsearch")) {
 
-        } else if (path.equals("/find")) {
-
-        } else {
-            // return status code
-        }
     }
 
     /**
@@ -93,12 +84,12 @@ public class HTTPServer {
                     BufferedReader instream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter writer = new PrintWriter(socket.getOutputStream())
             ) {
-                Request request = new Request(LOGGER, instream);
-                request.validMethod();
+                HttpRequest httpRequest = new HttpRequest(LOGGER, writer, instream);
+                httpRequest.validMethod();
 
 
                 // get the content length
-                int contentLength = request.getContentLength();
+                int contentLength = httpRequest.getContentLength();
 
                 // if method == get, then return a xhtml file. Send to handler -> html file
                     // if file is not already in the serve, then return 404 file not found

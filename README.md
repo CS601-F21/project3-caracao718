@@ -18,18 +18,18 @@ For Part 1 of this assignment you will implement an HTTP framework.
 
 ### Requirements
 
-1. You must use raw sockets for this assignment. You may *not* use Tomcat, Jetty, or any other existing framework. You also may *not* use any external libraries for request parsing, etc.
+1. You must use raw sockets for this assignment. You may *not* use Tomcat, Jetty, or any other existing framework. You also may *not* use any external libraries for httpRequest parsing, etc.
 2. Your framework must support `GET` and `POST` requests. Any other HTTP method will result in a `405 Method Not Allowed` status code. See [HTTP Status Code Definitions](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html). 
 3. Your framework must return [well-formed XHTML](https://www.w3schools.com/html/html_xhtml.asp). *Note: empty elements must always be closed.*
 4. Your framework must be flexible enough to support different web applications. 
-5. Your framework will be multithreaded. Each incoming request will be handled by a different thread.
+5. Your framework will be multithreaded. Each incoming httpRequest will be handled by a different thread.
 
 ### Recommended Design
 
 It is recommend you follow a design similar to the design supported by [Jetty](https://www.eclipse.org/jetty/javadoc/jetty-11/index.html?overview-summary.html). Your design does not need to follow the exact API nor does it need to be as extensive, however I recommend you borrow similar ideas. Here are a few items to consider:
 
 - Create a `Handler` interface with a `handle` method. Each web application will implement a different set of handlers, for example a search application will support a `SearchHandler` and a chat application would have a `ChatHandler`. 
-- Support an `addMapping` method that will map a URI path to a specific `Handler` instance. When a new request is made to the framework the framework will retrieve from the mapping the `Handler` appropriate for the path in the request URI.
+- Support an `addMapping` method that will map a URI path to a specific `Handler` instance. When a new httpRequest is made to the framework the framework will retrieve from the mapping the `Handler` appropriate for the path in the httpRequest URI.
 
 The examples below show how my API is used for the required applications below.
 
@@ -39,10 +39,10 @@ public class SearchApplication {
 	public static void main(String[] args) {
 		int port = 1024;
 		HTTPServer framework = new HTTPServer(port);
-		//The request GET /reviewsearch will be dispatched to the 
+		//The httpRequest GET /reviewsearch will be dispatched to the 
 		//handle method of the ReviewSearchHandler.
 		framework.addMapping("/reviewsearch", new ReviewSearchHandler());
-		//The request GET /find will be dispatched to the 
+		//The httpRequest GET /find will be dispatched to the 
 		//handle method of the FindHandler.
 		framework.addMapping("/find", new FindHandler());
 		framework.startup();
@@ -71,21 +71,21 @@ You will support the following four APIs:
 
 #### `GET /reviewsearch`
 
-This request will return a web page containing, at minimum, a text box and button. When the user enters a query in the text box and clicks the button the `POST` method described below will be called.
+This httpRequest will return a web page containing, at minimum, a text box and button. When the user enters a query in the text box and clicks the button the `POST` method described below will be called.
 
 #### `POST /reviewsearch`
 
-The body of this request will look as follows: `query=term` where the value is a URL-encoded string.
+The body of this httpRequest will look as follows: `query=term` where the value is a URL-encoded string.
 
 You will return a web page listing all of the review search results.
 
 #### `GET /find`
 
-This request will return a web page containing, at minimum, a text box and button. When the user enters a message in the text box and clicks the button the `POST` method described below will be called.
+This httpRequest will return a web page containing, at minimum, a text box and button. When the user enters a message in the text box and clicks the button the `POST` method described below will be called.
 
 #### `POST /find`
 
-The body of this request will look as follows: `asin=123456789` where the value is a URL-encoded string.
+The body of this httpRequest will look as follows: `asin=123456789` where the value is a URL-encoded string.
 
 You will return a web page listing all of the review and qa documents with the provided ASIN.
 
@@ -97,15 +97,15 @@ You will support the following two APIs:
 
 #### `GET /slackbot`
 
-This request will return a web page containing, at minimum, a text box and button. When the user enters a message in the text box and clicks the button the `POST` method described below will be called.
+This httpRequest will return a web page containing, at minimum, a text box and button. When the user enters a message in the text box and clicks the button the `POST` method described below will be called.
 
 #### `POST /slackbot`
 
-The body of this request will look as follows: `message=test+message` where the value is a URL-encoded string.
+The body of this httpRequest will look as follows: `message=test+message` where the value is a URL-encoded string.
 
-This request will trigger a post of the message specified by the body to the Slack channel `#project3`. Regardless of the user who types the message it will always appear to have come from your application.
+This httpRequest will trigger a post of the message specified by the body to the Slack channel `#project3`. Regardless of the user who types the message it will always appear to have come from your application.
 
-You may choose what to return to the client. One option is to return a web page with a confirmation, and another option is to return the same page returned by the `GET` request so that the user may post another message.
+You may choose what to return to the client. One option is to return a web page with a confirmation, and another option is to return the same page returned by the `GET` httpRequest so that the user may post another message.
 
 ## Part 4 - Tests
 
@@ -117,15 +117,15 @@ Your grade for Part 4 will be based on the completeness of your tests. If you im
 
 ### Unit Tests
 
-Unit tests will test one method. It is not required that you have unit tests for every method you implement, however methods that perform complex processing or logic should have one or more associated unit tests. As an example, you may have a method that parses an HTTP request to validate that it has a correct format, valid method, etc. You should implement several unit tests to confirm that the method works correctly when the request is valid and in all scenarios when it is invalid.
+Unit tests will test one method. It is not required that you have unit tests for every method you implement, however methods that perform complex processing or logic should have one or more associated unit tests. As an example, you may have a method that parses an HTTP httpRequest to validate that it has a correct format, valid method, etc. You should implement several unit tests to confirm that the method works correctly when the httpRequest is valid and in all scenarios when it is invalid.
 
 ### Integration Tests
 
-Integration tests generally test a path of execution through your program. You may, for example, have a handler that takes as input a request and then calls another method to post to to Slack. In this case, you could use a *mock request object* and test that passing that mock object to your handler results in a correct post to Slack.
+Integration tests generally test a path of execution through your program. You may, for example, have a handler that takes as input a httpRequest and then calls another method to post to to Slack. In this case, you could use a *mock httpRequest object* and test that passing that mock object to your handler results in a correct post to Slack.
 
 ### System Tests
 
-System tests will test the end-to-end execution of your program. A system test would use a client program to make a request (valid or invalid) of your deployed framework and verify that the response is correct.
+System tests will test the end-to-end execution of your program. A system test would use a client program to make a httpRequest (valid or invalid) of your deployed framework and verify that the response is correct.
 
 ## Other Advice 
 1. You may limit the size of the `InvertedIndex` used in Part 2 to 10,000 records.
@@ -150,7 +150,7 @@ The only external libraries you may use for this assignment are [GSON](https://g
 
 ## Team Option
 
-Requests to work in a team of no more than two students will be considered. *No one may work as a team until your request is formally approved by the instructor*. If you are interested in a team option *both members of the team must come to office hour on Oct 20 or 21* with a proposed work distribution and collaboration plan. The instructor will approve or decline requests made by October 21.
+Requests to work in a team of no more than two students will be considered. *No one may work as a team until your httpRequest is formally approved by the instructor*. If you are interested in a team option *both members of the team must come to office hour on Oct 20 or 21* with a proposed work distribution and collaboration plan. The instructor will approve or decline requests made by October 21.
 
 ## Submission
 
