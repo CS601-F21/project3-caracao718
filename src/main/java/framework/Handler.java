@@ -1,5 +1,7 @@
 package framework;
 
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.HashSet;
@@ -17,9 +19,9 @@ public interface Handler {
 
     /**
      * Set the paths for each handler
-     * @param paths
+     * @param path
      */
-    public void setPath(HashSet<String> paths);
+    public void setPath(String path);
 
     /**
      * Set the method for each request
@@ -38,6 +40,12 @@ public interface Handler {
      * @param writer
      */
     public void setWriter(PrintWriter writer);
+
+    /**
+     * Set the Logger
+     * @param LOGGER
+     */
+    public void setLogger(Logger LOGGER);
 
     /**
      * Set the content length for POST method. This is optional

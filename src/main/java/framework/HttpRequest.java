@@ -78,7 +78,7 @@ public class HttpRequest {
     }
 
     public void validMethod() {
-        if (!method.equals("GET") && !method.equals("POST")) {
+        if (!method.equals(HttpConstants.GET) && !method.equals(HttpConstants.POST)) {
             // bad request
             ServerUtils.send405(writer);
             // continue finishing the thread

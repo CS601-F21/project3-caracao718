@@ -21,8 +21,8 @@ public class HTTPServer {
     private final int threadPoolSize = 30;
     private static final Logger LOGGER = LogManager.getLogger(HTTPServer.class);
 
-    private HashSet<String> paths = new HashSet<>();
-    private HashSet<Handler> handlers = new HashSet<>();
+//    private HashSet<String> paths = new HashSet<>();
+//    private HashSet<Handler> handlers = new HashSet<>();
 
     private Map<String, Handler> mappings = new HashMap<>();
 
@@ -49,8 +49,7 @@ public class HTTPServer {
      * Maps a URI path to a specific Handler instance.
      */
     public void addMapping(String path, Handler handler) {
-//        this.paths.add(path);
-//        this.handlers.add(handler);
+
         this.mappings.put(path, handler);
     }
 
@@ -98,11 +97,14 @@ public class HTTPServer {
                 if (mappings.containsKey(httpRequest.getPath())) {
                     Handler currHandler = mappings.get(httpRequest.getPath());
 //                    currHandler.handle(currHandler);
-                    currHandler.setPath(paths);
+                    currHandler.setPath(httpRequest.getPath());
                     currHandler.setMethod(httpRequest.getMethod());
                     currHandler.setReader(instream);
                     currHandler.setWriter(writer);
+                    currHandler.setLogger(LOGGER);
                     currHandler.setContentLength(httpRequest.getContentLength());
+                } else {
+                    ServerUtils.send404(writer);
                 }
 
 
