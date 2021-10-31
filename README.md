@@ -4,7 +4,7 @@ Project 3 - HTTP Server
 
 ### Due - Thursday, November 4, 2021 - 9:55am
 
-For this project, you will implement an HTTP server, two web applications, and a full suite of tests. You will practice using the following:
+For this project, you will implement an HTTP framework, two web applications, and a full suite of tests. You will practice using the following:
 
 - Concurrency and threads
 - Sockets
@@ -14,22 +14,22 @@ For this project, you will implement an HTTP server, two web applications, and a
 
 ## Part 1 - HTTP Server
 
-For Part 1 of this assignment you will implement an HTTP server. 
+For Part 1 of this assignment you will implement an HTTP framework. 
 
 ### Requirements
 
-1. You must use raw sockets for this assignment. You may *not* use Tomcat, Jetty, or any other existing server. You also may *not* use any external libraries for request parsing, etc.
-2. Your server must support `GET` and `POST` requests. Any other HTTP method will result in a `405 Method Not Allowed` status code. See [HTTP Status Code Definitions](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html). 
-3. Your server must return [well-formed XHTML](https://www.w3schools.com/html/html_xhtml.asp). *Note: empty elements must always be closed.*
-4. Your server must be flexible enough to support different web applications. 
-5. Your server will be multithreaded. Each incoming request will be handled by a different thread.
+1. You must use raw sockets for this assignment. You may *not* use Tomcat, Jetty, or any other existing framework. You also may *not* use any external libraries for request parsing, etc.
+2. Your framework must support `GET` and `POST` requests. Any other HTTP method will result in a `405 Method Not Allowed` status code. See [HTTP Status Code Definitions](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html). 
+3. Your framework must return [well-formed XHTML](https://www.w3schools.com/html/html_xhtml.asp). *Note: empty elements must always be closed.*
+4. Your framework must be flexible enough to support different web applications. 
+5. Your framework will be multithreaded. Each incoming request will be handled by a different thread.
 
 ### Recommended Design
 
 It is recommend you follow a design similar to the design supported by [Jetty](https://www.eclipse.org/jetty/javadoc/jetty-11/index.html?overview-summary.html). Your design does not need to follow the exact API nor does it need to be as extensive, however I recommend you borrow similar ideas. Here are a few items to consider:
 
 - Create a `Handler` interface with a `handle` method. Each web application will implement a different set of handlers, for example a search application will support a `SearchHandler` and a chat application would have a `ChatHandler`. 
-- Support an `addMapping` method that will map a URI path to a specific `Handler` instance. When a new request is made to the server the server will retrieve from the mapping the `Handler` appropriate for the path in the request URI.
+- Support an `addMapping` method that will map a URI path to a specific `Handler` instance. When a new request is made to the framework the framework will retrieve from the mapping the `Handler` appropriate for the path in the request URI.
 
 The examples below show how my API is used for the required applications below.
 
@@ -38,14 +38,14 @@ The examples below show how my API is used for the required applications below.
 public class SearchApplication {
 	public static void main(String[] args) {
 		int port = 1024;
-		HTTPServer server = new HTTPServer(port);
+		HTTPServer framework = new HTTPServer(port);
 		//The request GET /reviewsearch will be dispatched to the 
 		//handle method of the ReviewSearchHandler.
-		server.addMapping("/reviewsearch", new ReviewSearchHandler());
+		framework.addMapping("/reviewsearch", new ReviewSearchHandler());
 		//The request GET /find will be dispatched to the 
 		//handle method of the FindHandler.
-		server.addMapping("/find", new FindHandler());
-		server.startup();
+		framework.addMapping("/find", new FindHandler());
+		framework.startup();
 	}
 }
 
@@ -55,9 +55,9 @@ public class SearchApplication {
 public class ChatApplication {
 	public static void main(String[] args) {
 		int port = 1024;
-		HTTPServer server = new HTTPServer(port);
-		server.addMapping("/slackbot", new ChatHandler());
-		server.startup();
+		HTTPServer framework = new HTTPServer(port);
+		framework.addMapping("/slackbot", new ChatHandler());
+		framework.startup();
 	}
 }
 
@@ -125,11 +125,11 @@ Integration tests generally test a path of execution through your program. You m
 
 ### System Tests
 
-System tests will test the end-to-end execution of your program. A system test would use a client program to make a request (valid or invalid) of your deployed server and verify that the response is correct.
+System tests will test the end-to-end execution of your program. A system test would use a client program to make a request (valid or invalid) of your deployed framework and verify that the response is correct.
 
 ## Other Advice 
 1. You may limit the size of the `InvertedIndex` used in Part 2 to 10,000 records.
-2. It is strongly recommended that you implement thorough logging in your solution. This will help you debug. Your logs should indicate which requests were made to your server and where your server went wrong.
+2. It is strongly recommended that you implement thorough logging in your solution. This will help you debug. Your logs should indicate which requests were made to your framework and where your framework went wrong.
 3. Consider using curl or another client program to perform initial tests on your deployed solution. Below are a few requests to get you started.
 
 ```

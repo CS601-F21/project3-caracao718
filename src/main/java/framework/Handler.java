@@ -1,4 +1,4 @@
-package server;
+package framework;
 
 public interface Handler {
     /**

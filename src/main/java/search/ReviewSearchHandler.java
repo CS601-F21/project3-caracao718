@@ -1,6 +1,6 @@
 package search;
 
-import server.Handler;
+import framework.Handler;
 
 public class ReviewSearchHandler implements Handler {
     public void handle() {

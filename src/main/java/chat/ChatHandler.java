@@ -1,6 +1,6 @@
 package chat;
 
-import server.Handler;
+import framework.Handler;
 
 public class ChatHandler implements Handler {
     @Override
