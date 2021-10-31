@@ -4,6 +4,9 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,6 +20,11 @@ public class HTTPServer {
     private final ExecutorService threadPool;
     private final int threadPoolSize = 30;
     private static final Logger LOGGER = LogManager.getLogger(HTTPServer.class);
+
+    private HashSet<String> paths = new HashSet<>();
+    private HashSet<Handler> handlers = new HashSet<>();
+
+    private Map<String, Handler> mappings = new HashMap<>();
 
      private ServerSocket serverSocket = null;
 
@@ -41,9 +49,9 @@ public class HTTPServer {
      * Maps a URI path to a specific Handler instance.
      */
     public void addMapping(String path, Handler handler) {
-        // should there be a field to store path?
-        // since the server must be flexible enough to support different web apps, we cannot do something like:
-
+//        this.paths.add(path);
+//        this.handlers.add(handler);
+        this.mappings.put(path, handler);
     }
 
     /**
@@ -87,14 +95,16 @@ public class HTTPServer {
                 HttpRequest httpRequest = new HttpRequest(LOGGER, writer, instream);
                 httpRequest.validMethod();
 
+                if (mappings.containsKey(httpRequest.getPath())) {
+                    Handler currHandler = mappings.get(httpRequest.getPath());
+//                    currHandler.handle(currHandler);
+                    currHandler.setPath(paths);
+                    currHandler.setMethod(httpRequest.getMethod());
+                    currHandler.setReader(instream);
+                    currHandler.setWriter(writer);
+                    currHandler.setContentLength(httpRequest.getContentLength());
+                }
 
-                // get the content length
-                int contentLength = httpRequest.getContentLength();
-
-                // if method == get, then return a xhtml file. Send to handler -> html file
-                    // if file is not already in the serve, then return 404 file not found
-                    // if the file is already in server, then return the file
-                // if method == post, create new XHTML and return
 
 
             } catch (IOException ioe) {

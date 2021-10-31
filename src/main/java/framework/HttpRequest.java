@@ -36,8 +36,16 @@ public class HttpRequest {
         LOGGER.debug("Http Version: " + version);
     }
 
+    public String getMethod() {
+        return method;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
     public int getContentLength() {
-        int contentLength = 0;
+        contentLength = 0;
         headers = new ArrayList<>();
         String header;
         try {
