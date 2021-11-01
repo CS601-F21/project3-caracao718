@@ -23,8 +23,13 @@ public class ReviewSearchHandler implements Handler {
     private PrintWriter writer;
     private static final Logger LOGGER = LogManager.getLogger(ReviewSearchHandler.class);
     private int contentLength;
+    private AmazonSearch search;
 
     private List<String> reviewSearchResults = new ArrayList<>();
+
+    public ReviewSearchHandler(AmazonSearch search) {
+        this.search = search;
+    }
 
     public void startApplication() {
         if (method.equals(HttpConstants.GET)) {
@@ -69,12 +74,12 @@ public class ReviewSearchHandler implements Handler {
         } else {
             bodyValue = input[1];
         }
-        System.out.println("new body value");
+        System.out.println(bodyValue);
 
 
         // do the reviewsearh in project 1, return all the results in the HTML page
-        AmazonSearch reviewSearch = new AmazonSearch("reviewsearch", bodyValue);
-        reviewSearchResults = reviewSearch.getResults();
+//        AmazonSearch reviewSearch = new AmazonSearch("reviewsearch", bodyValue);
+        reviewSearchResults = search.getResults("reviewsearch", bodyValue);
 
 //        reviewSearchResults.add("hi");
 //        reviewSearchResults.add("hi");

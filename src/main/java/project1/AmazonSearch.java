@@ -12,33 +12,34 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class AmazonSearch {
-
+    private String review_file_name = "Cell_Phones_and_Accessories_5.json";
+    private String qa_file_name = "qa_Cell_Phones_and_Accessories.json";
+    FileReader reviewReader;
+    FileReader qaReader;
+    DataStructures reviewStructures;
+    DataStructures qaStructures;
 
 
     private CopyOnWriteArrayList<String> results;
 
-    public AmazonSearch(String searchType, String input) {
+    public AmazonSearch() {
 
         System.out.println("reached amazonsearch");
 
-        String review_file_name = "Cell_Phones_and_Accessories_5.json";
-        FileReader reviewReader = new FileReader(review_file_name);
+        reviewReader = new FileReader(review_file_name);
         System.out.println("finished reading in review");
-        DataStructures reviewStructures = reviewReader.readReviewFile();
+        reviewStructures = reviewReader.readReviewFile();
         System.out.println("created the review data structure");
 
-        String qa_file_name = "qa_Cell_Phones_and_Accessories.json";
-        FileReader qaReader = new FileReader(qa_file_name);
+        qaReader = new FileReader(qa_file_name);
         System.out.println("finish reading in qa");
-        DataStructures qaStructures = qaReader.readQaFile();
+        qaStructures = qaReader.readQaFile();
         System.out.println("created the qa data structure");
 
-        executeCommand(reviewStructures, qaStructures, searchType, input);
-
-        System.out.println("finished reading in data");
     }
 
-    public CopyOnWriteArrayList<String> getResults() {
+    public CopyOnWriteArrayList<String> getResults(String searchType, String input) {
+        executeCommand(reviewStructures, qaStructures, searchType, input);
         return results;
     }
 
