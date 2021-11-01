@@ -1,6 +1,8 @@
 package search;
 
+import framework.HTTPServer;
 import framework.Handler;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -12,11 +14,11 @@ public class FindHandler implements Handler {
     private String path;
     private BufferedReader reader;
     private PrintWriter writer;
-    private Logger LOGGER;
+    private Logger LOGGER = LogManager.getLogger(FindHandler.class);;
     private int contentLength;
 
     @Override
-    public void handle(Handler handler) {
+    public void startApplication() {
 
     }
 
@@ -40,10 +42,6 @@ public class FindHandler implements Handler {
         this.writer = writer;
     }
 
-    @Override
-    public void setLogger(Logger LOGGER) {
-        this.LOGGER = LOGGER;
-    }
 
     @Override
     public void setContentLength(int contentLength) {

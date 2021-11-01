@@ -13,9 +13,8 @@ public interface Handler {
 
     /**
      * Set the Handler
-     * @param handler
      */
-    public void handle(Handler handler);
+    public void startApplication();
 
     /**
      * Set the paths for each handler
@@ -40,12 +39,6 @@ public interface Handler {
      * @param writer
      */
     public void setWriter(PrintWriter writer);
-
-    /**
-     * Set the Logger
-     * @param LOGGER
-     */
-    public void setLogger(Logger LOGGER);
 
     /**
      * Set the content length for POST method. This is optional

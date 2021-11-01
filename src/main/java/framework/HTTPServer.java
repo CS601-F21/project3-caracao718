@@ -21,8 +21,6 @@ public class HTTPServer {
     private final int threadPoolSize = 30;
     private static final Logger LOGGER = LogManager.getLogger(HTTPServer.class);
 
-//    private HashSet<String> paths = new HashSet<>();
-//    private HashSet<Handler> handlers = new HashSet<>();
 
     private Map<String, Handler> mappings = new HashMap<>();
 
@@ -101,12 +99,12 @@ public class HTTPServer {
                     currHandler.setMethod(httpRequest.getMethod());
                     currHandler.setReader(instream);
                     currHandler.setWriter(writer);
-                    currHandler.setLogger(LOGGER);
+//                    currHandler.setLogger(LOGGER);
                     currHandler.setContentLength(httpRequest.getContentLength());
+                    currHandler.startApplication();
                 } else {
                     ServerUtils.send404(writer);
                 }
-
 
 
             } catch (IOException ioe) {
@@ -115,15 +113,6 @@ public class HTTPServer {
 
         }
 
-        // a class similar to
-        private void doGet() {
-            // send to handler
-
-        }
-
-        private void doPost() {
-
-        }
 
     }
 }

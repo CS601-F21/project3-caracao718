@@ -1,5 +1,6 @@
 package framework;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -12,7 +13,7 @@ public class HttpRequest {
     private String method;
     private String path;
     private String version;
-    private Logger LOGGER;
+    private final Logger LOGGER = LogManager.getLogger(HttpRequest.class);
     private PrintWriter writer;
     private int contentLength;
     private BufferedReader instream;
@@ -21,7 +22,7 @@ public class HttpRequest {
 
     public HttpRequest(Logger logger, PrintWriter writer, BufferedReader instream) {
         this.instream = instream;
-        this.LOGGER = logger;
+//        this.LOGGER = logger;
         this.writer = writer;
 
         String requestLine = readLine();

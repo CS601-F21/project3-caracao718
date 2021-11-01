@@ -12,7 +12,7 @@ public class ChatHandler implements Handler {
 
 
     @Override
-    public void handle(Handler handler) {
+    public void startApplication() {
 
     }
 
@@ -36,10 +36,6 @@ public class ChatHandler implements Handler {
 
     }
 
-    @Override
-    public void setLogger(Logger LOGGER) {
-
-    }
 
     @Override
     public void setContentLength(int contentLength) {
