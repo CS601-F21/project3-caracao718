@@ -69,12 +69,19 @@ public class ReviewSearchHandler implements Handler {
         } else {
             bodyValue = input[1];
         }
+        System.out.println("new body value");
 
 
         // do the reviewsearh in project 1, return all the results in the HTML page
         AmazonSearch reviewSearch = new AmazonSearch("reviewsearch", bodyValue);
         reviewSearchResults = reviewSearch.getResults();
 
+//        reviewSearchResults.add("hi");
+//        reviewSearchResults.add("hi");
+//        reviewSearchResults.add("hi");
+//        reviewSearchResults.add("hi");
+//        reviewSearchResults.add("hi");
+        
 
         ServerUtils.send200(writer);
         writer.println(ReviewSearchConstants.PAGE_HEADER);

@@ -8,25 +8,37 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class AmazonSearch {
 
-    private String review_file_name = "Cell_Phones_and_Accessories_5.json";
-    private FileReader reviewReader = new FileReader(review_file_name);
-    private DataStructures reviewStructures = reviewReader.readReviewFile();
 
-    private String qa_file_name = "qa_Cell_Phones_and_Accessories.json";
-    private FileReader qaReader = new FileReader(qa_file_name);
-    private DataStructures qaStructures = qaReader.readQaFile();
 
-    private List<String> results;
+    private CopyOnWriteArrayList<String> results;
 
     public AmazonSearch(String searchType, String input) {
+
+        System.out.println("reached amazonsearch");
+
+        String review_file_name = "Cell_Phones_and_Accessories_5.json";
+        FileReader reviewReader = new FileReader(review_file_name);
+        System.out.println("finished reading in review");
+        DataStructures reviewStructures = reviewReader.readReviewFile();
+        System.out.println("created the review data structure");
+
+        String qa_file_name = "qa_Cell_Phones_and_Accessories.json";
+        FileReader qaReader = new FileReader(qa_file_name);
+        System.out.println("finish reading in qa");
+        DataStructures qaStructures = qaReader.readQaFile();
+        System.out.println("created the qa data structure");
+
         executeCommand(reviewStructures, qaStructures, searchType, input);
+
+        System.out.println("finished reading in data");
     }
 
-    public List<String> getResults() {
+    public CopyOnWriteArrayList<String> getResults() {
         return results;
     }
 
@@ -66,7 +78,7 @@ public class AmazonSearch {
      * @param reviewCount
      */
     private List<String> printFindAsin(ArrayList<Item> items, int reviewCount, int qaCount) {
-        results = new ArrayList<>();
+        results = new CopyOnWriteArrayList<>();
         if (items == null) {
             System.out.println("no results for this part");
         } else {
@@ -75,17 +87,12 @@ public class AmazonSearch {
                     reviewCount++;
                     results.add("review number: " + reviewCount);
                     results.add("Review: " + review.getReviewText() + '\n');
-//                    System.out.println("review number: " + reviewCount);
-//                    System.out.println("Review: " + review.getReviewText());
                 } else if (item instanceof QuestionAndAnswer qa) {
                     qaCount++;
                     results.add("QA number: " + qaCount);
                     results.add("Question: " + qa.getQuestion());
                     results.add("Answer: " + qa.getAnswer() +'\n');
 
-//                    System.out.println("QA number: " + qaCount);
-//                    System.out.println("Question: " + qa.getQuestion());
-//                    System.out.println("Answer: " + qa.getAnswer());
                 }
             }
         }
@@ -97,14 +104,13 @@ public class AmazonSearch {
      * @param term
      */
     private void reviewSearch(String term, DataStructures reviewStructures) {
-        results = new ArrayList<>();
+        results = new CopyOnWriteArrayList<>();
         int count = 0;
         List<Integer> list = reviewStructures.getIndex().exactSearch(term);
         for (int id : list) {
             Review review = (Review)reviewStructures.getDictionary().get(id);
             count++;
             results.add(count + ". " +review.getReviewText() + '\n');
-//            System.out.println(count + ". " +review.getReviewText());
         }
     }
 

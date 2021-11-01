@@ -1,6 +1,7 @@
 package project1;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A class that implements inverted index
@@ -9,7 +10,8 @@ import java.util.*;
 
 public class InvertedIndex {
 
-    private Map<String, Map<Integer, Integer>> invertedIndex = new HashMap<>(); // word -> {docID -> frequency}
+    private final Map<String, Map<Integer, Integer>> invertedIndex = new ConcurrentHashMap<>(); // word -> {docID -> frequency}
+
 
     /**
      * A method that add a new map to the invertedIndex
