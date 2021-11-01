@@ -5,6 +5,7 @@ import framework.HttpConstants;
 import framework.ServerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import project1.AmazonSearch;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class ReviewSearchHandler implements Handler {
     private String path;
     private BufferedReader reader;
     private PrintWriter writer;
-    private final Logger LOGGER = LogManager.getLogger(ReviewSearchHandler.class);
+    private static final Logger LOGGER = LogManager.getLogger(ReviewSearchHandler.class);
     private int contentLength;
 
     private List<String> reviewSearchResults = new ArrayList<>();
@@ -34,12 +35,14 @@ public class ReviewSearchHandler implements Handler {
     }
 
     public void doGet() {
+        System.out.println("doing get");
         ServerUtils.send200(writer);
         // send the HTML page
         writer.println(ReviewSearchConstants.GET_REVIEW_SEARCH_PAGE);
     }
 
     private void doPost() {
+        System.out.println("do post");
         char[] bodyArr = new char[contentLength];
         try {
             reader.read(bodyArr, 0, bodyArr.length);
@@ -49,6 +52,8 @@ public class ReviewSearchHandler implements Handler {
         String body = new String(bodyArr);
         LOGGER.info("Message body: " + body);
 
+
+        // need to handle if it's not query=term return 400 if query != query
         String bodyValue = null;
         try {
             bodyValue = URLDecoder.decode(body.substring(body.indexOf("=")+1, body.length()), StandardCharsets.UTF_8.toString());
@@ -56,14 +61,19 @@ public class ReviewSearchHandler implements Handler {
             e.printStackTrace();
         }
         LOGGER.info("Message body value: " + bodyValue);
+        System.out.println(bodyValue);
+
+        String[] input = bodyValue.split("=");
+        if (!input[0].equals("query")) {
+            ServerUtils.send400(writer);
+        } else {
+            bodyValue = input[1];
+        }
+
 
         // do the reviewsearh in project 1, return all the results in the HTML page
-        reviewSearchResults.add("hi");
-        reviewSearchResults.add("hi");
-        reviewSearchResults.add("hi");
-        reviewSearchResults.add("hi");
-        reviewSearchResults.add("hi");
-        reviewSearchResults.add("hi");
+        AmazonSearch reviewSearch = new AmazonSearch("reviewsearch", bodyValue);
+        reviewSearchResults = reviewSearch.getResults();
 
 
         ServerUtils.send200(writer);

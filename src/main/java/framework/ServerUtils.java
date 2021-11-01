@@ -16,6 +16,15 @@ public class ServerUtils {
     }
 
     /**
+     * Send the status line of an HTTP 400 Bad Request response.
+     * @param writer
+     */
+    public static void send400(PrintWriter writer) {
+        writer.printf("%s %s\r\n", HttpConstants.VERSION, HttpConstants.BAD_REQUEST);
+        writer.printf("%s \r\n\r\n", HttpConstants.CONNECTION_CLOSE);
+    }
+
+    /**
      * Send the status line of an HTTP 404 Not Found response.
      * @param writer
      */

@@ -5,7 +5,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,6 +57,7 @@ public class HTTPServer {
         try {
             serverSocket = new ServerSocket(port);
             LOGGER.info("HTTP Server listening on port: " + port);
+            System.out.println("server listening");
             while (running) {
                 LOGGER.info("Waiting for new client connection...");
                 Socket socket = serverSocket.accept();
@@ -89,30 +89,31 @@ public class HTTPServer {
                     BufferedReader instream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     PrintWriter writer = new PrintWriter(socket.getOutputStream())
             ) {
-                HttpRequest httpRequest = new HttpRequest(LOGGER, writer, instream);
+                HttpRequest httpRequest = new HttpRequest(writer, instream);
                 httpRequest.validMethod();
 
                 if (mappings.containsKey(httpRequest.getPath())) {
+                    System.out.println("getting to the HTTPserver");
                     Handler currHandler = mappings.get(httpRequest.getPath());
-//                    currHandler.handle(currHandler);
                     currHandler.setPath(httpRequest.getPath());
                     currHandler.setMethod(httpRequest.getMethod());
                     currHandler.setReader(instream);
                     currHandler.setWriter(writer);
-//                    currHandler.setLogger(LOGGER);
-                    currHandler.setContentLength(httpRequest.getContentLength());
+                    if (httpRequest.getMethod().equals(HttpConstants.POST)) {
+                        currHandler.setContentLength(httpRequest.getContentLength());
+                    } else {
+                        currHandler.setContentLength(0);
+                    }
+
                     currHandler.startApplication();
                 } else {
                     ServerUtils.send404(writer);
                 }
 
-
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
-
         }
-
 
     }
 }

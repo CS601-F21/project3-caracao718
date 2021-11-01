@@ -12,11 +12,12 @@ public class ReviewSearchConstants {
             "<body>\n" +
             "\n";
 
+
     public static final String GET_REVIEW_SEARCH_PAGE = PAGE_HEADER +
             "<form action=\"/reviewsearch\" method=\"post\">\n" +
             "  <label for=\"msg\">Message:</label><br/>\n" +
             "  <input type=\"text\" id=\"msg\" name=\"msg\"/><br/>\n" +
             "  <input type=\"submit\" value=\"Submit\"/>\n" +
-            "</form>" +
+            "</form>\n" +
             HttpConstants.HTML_FOOTER;
 }

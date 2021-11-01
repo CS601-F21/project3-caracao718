@@ -13,16 +13,15 @@ public class HttpRequest {
     private String method;
     private String path;
     private String version;
-    private final Logger LOGGER = LogManager.getLogger(HttpRequest.class);
+    private static final Logger LOGGER = LogManager.getLogger(HttpRequest.class);
     private PrintWriter writer;
     private int contentLength;
     private BufferedReader instream;
     private List<String> headers;
 
 
-    public HttpRequest(Logger logger, PrintWriter writer, BufferedReader instream) {
+    public HttpRequest(PrintWriter writer, BufferedReader instream) {
         this.instream = instream;
-//        this.LOGGER = logger;
         this.writer = writer;
 
         String requestLine = readLine();
