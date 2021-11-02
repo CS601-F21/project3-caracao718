@@ -57,7 +57,6 @@ public class HTTPServer {
         try {
             serverSocket = new ServerSocket(port);
             LOGGER.info("HTTP Server listening on port: " + port);
-            System.out.println("server listening");
             while (running) {
                 LOGGER.info("Waiting for new client connection...");
                 Socket socket = serverSocket.accept();
@@ -93,7 +92,6 @@ public class HTTPServer {
                 httpRequest.validMethod();
 
                 if (mappings.containsKey(httpRequest.getPath())) {
-                    System.out.println("getting to the HTTPserver");
                     Handler currHandler = mappings.get(httpRequest.getPath());
                     currHandler.setPath(httpRequest.getPath());
                     currHandler.setMethod(httpRequest.getMethod());
@@ -105,7 +103,7 @@ public class HTTPServer {
                         currHandler.setContentLength(0);
                     }
 
-                    currHandler.startApplication();
+                    currHandler.startApplication(writer, instream);
                 } else {
                     ServerUtils.send404(writer);
                 }

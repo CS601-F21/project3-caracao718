@@ -15,23 +15,34 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ReviewSearchHandler implements Handler {
     private String method;
-    private String path;
     private BufferedReader reader;
     private PrintWriter writer;
+    private String path;
     private static final Logger LOGGER = LogManager.getLogger(ReviewSearchHandler.class);
     private int contentLength;
-    private AmazonSearch search;
+    private final AmazonSearch search;
 
-    private List<String> reviewSearchResults = new ArrayList<>();
-
+    /**
+     * Constructor for ReviewSearchHandler
+     * @param search
+     */
     public ReviewSearchHandler(AmazonSearch search) {
         this.search = search;
     }
 
-    public void startApplication() {
+    /**
+     * Start the Review Search
+     * @param writer
+     * @param reader
+     */
+    public synchronized void startApplication(PrintWriter writer, BufferedReader reader) {
+        this.writer = writer;
+        this.reader = reader;
         if (method.equals(HttpConstants.GET)) {
             doGet();
         } else if (method.equals(HttpConstants.POST)) {
@@ -39,15 +50,20 @@ public class ReviewSearchHandler implements Handler {
         }
     }
 
-    public void doGet() {
-        System.out.println("doing get");
+    /**
+     * Do a GET method
+     */
+    public synchronized void doGet() {
         ServerUtils.send200(writer);
         // send the HTML page
         writer.println(ReviewSearchConstants.GET_REVIEW_SEARCH_PAGE);
     }
 
-    private void doPost() {
-        System.out.println("do post");
+    /**
+     * Do a POST method
+     */
+    private synchronized void doPost() {
+
         char[] bodyArr = new char[contentLength];
         try {
             reader.read(bodyArr, 0, bodyArr.length);
@@ -60,70 +76,75 @@ public class ReviewSearchHandler implements Handler {
 
         // need to handle if it's not query=term return 400 if query != query
         String bodyValue = null;
+        String queryValue = null;
         try {
             bodyValue = URLDecoder.decode(body.substring(body.indexOf("=")+1, body.length()), StandardCharsets.UTF_8.toString());
+            queryValue = URLDecoder.decode(body.substring(0, body.indexOf("=")), StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         LOGGER.info("Message body value: " + bodyValue);
-        System.out.println(bodyValue);
+        LOGGER.info("Message query: " + queryValue);
 
-        String[] input = bodyValue.split("=");
-        if (!input[0].equals("query")) {
-            ServerUtils.send400(writer);
-        } else {
-            bodyValue = input[1];
-        }
-        System.out.println(bodyValue);
+//        if (!Objects.equals(queryValue, ReviewSearchConstants.QUERY)) {
+//            ServerUtils.send400(writer);
+//        } else {
+//            // do the reviewsearh in project 1, return the current results in HTML page
+//            List<String> reviewSearchResults = new CopyOnWriteArrayList<>(search.getResults(ReviewSearchConstants.REVIEW_SEARCH, bodyValue));
+//
+//            ServerUtils.send200(writer);
+//            writer.println(ReviewSearchConstants.PAGE_HEADER);
+//            writer.println("<h3>Messages</h3>\n");
+//            writer.println("<ul>\n");
+//            for(String result: reviewSearchResults) {
+//                writer.println("<li>" + result + "</li>\n");
+//            }
+//            writer.println("</ul>\n");
+//            writer.println(ReviewSearchConstants.REVIEW_SEARCH_BODY);
+//            writer.println(ReviewSearchConstants.PAGE_FOOTER);
+//        }
 
-
-        // do the reviewsearh in project 1, return all the results in the HTML page
-//        AmazonSearch reviewSearch = new AmazonSearch("reviewsearch", bodyValue);
-        reviewSearchResults = search.getResults("reviewsearch", bodyValue);
-
-//        reviewSearchResults.add("hi");
-//        reviewSearchResults.add("hi");
-//        reviewSearchResults.add("hi");
-//        reviewSearchResults.add("hi");
-//        reviewSearchResults.add("hi");
-        
+        // do the reviewsearh in project 1, return the current results in HTML page
+        List<String> reviewSearchResults = new CopyOnWriteArrayList<>(search.getResults(ReviewSearchConstants.REVIEW_SEARCH, bodyValue));
 
         ServerUtils.send200(writer);
         writer.println(ReviewSearchConstants.PAGE_HEADER);
         writer.println("<h3>Messages</h3>\n");
         writer.println("<ul>\n");
         for(String result: reviewSearchResults) {
-            writer.println("<li>" + result + "</li>");
+            writer.println("<li>" + result + "</li>\n");
         }
         writer.println("</ul>\n");
-        writer.println(HttpConstants.HTML_FOOTER);
+        writer.println(ReviewSearchConstants.REVIEW_SEARCH_BODY);
+        writer.println(ReviewSearchConstants.PAGE_FOOTER);
+
     }
 
 
     @Override
-    public void setPath(String path) {
+    public synchronized void setPath(String path) {
         this.path = path;
     }
 
     @Override
-    public void setMethod(String method) {
+    public synchronized void setMethod(String method) {
         this.method = method;
     }
 
     @Override
-    public void setReader(BufferedReader reader) {
+    public synchronized void setReader(BufferedReader reader) {
         this.reader = reader;
     }
 
     @Override
-    public void setWriter(PrintWriter writer) {
+    public synchronized void setWriter(PrintWriter writer) {
         this.writer = writer;
     }
 
 
 
     @Override
-    public void setContentLength(int contentLength) {
+    public synchronized void setContentLength(int contentLength) {
         this.contentLength = contentLength;
     }
 }

@@ -14,7 +14,7 @@ public interface Handler {
     /**
      * Set the Handler
      */
-    public void startApplication();
+    public void startApplication(PrintWriter writer, BufferedReader reader);
 
     /**
      * Set the paths for each handler

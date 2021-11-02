@@ -12,7 +12,7 @@ public class ChatHandler implements Handler {
 
 
     @Override
-    public void startApplication() {
+    public void startApplication(PrintWriter writer, BufferedReader reader) {
 
     }
 
