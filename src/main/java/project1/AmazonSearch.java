@@ -1,6 +1,8 @@
 package project1;
 
 
+import framework.ServerUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,37 +14,28 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class AmazonSearch {
-    private String review_file_name = "Cell_Phones_and_Accessories_5.json";
-    private String qa_file_name = "qa_Cell_Phones_and_Accessories.json";
-    FileReader reviewReader;
-    FileReader qaReader;
-    DataStructures reviewStructures;
-    DataStructures qaStructures;
+    private final String review_file_name = "Cell_Phones_and_Accessories_5.json";
+    private final String qa_file_name = "qa_Cell_Phones_and_Accessories.json";
+    private final FileReader reviewReader;
+    private final FileReader qaReader;
+    private final DataStructures reviewStructures;
+    private final DataStructures qaStructures;
 
-
-    private CopyOnWriteArrayList<String> results;
+    private final CopyOnWriteArrayList<String> results = new CopyOnWriteArrayList<>();
 
     public AmazonSearch() {
-
-        System.out.println("reached amazonsearch");
-
         reviewReader = new FileReader(review_file_name);
-        System.out.println("finished reading in review");
         reviewStructures = reviewReader.readReviewFile();
-        System.out.println("created the review data structure");
 
         qaReader = new FileReader(qa_file_name);
-        System.out.println("finish reading in qa");
         qaStructures = qaReader.readQaFile();
-        System.out.println("created the qa data structure");
-
     }
+
 
     public CopyOnWriteArrayList<String> getResults(String searchType, String input) {
         executeCommand(reviewStructures, qaStructures, searchType, input);
         return results;
     }
-
 
     /**
      * A method that takes input commands from the command line, and execute the program accordingly.
@@ -55,6 +48,8 @@ public class AmazonSearch {
             default -> System.out.println("something wrong with input, please try again");
         }
     }
+
+
 
     /**
      * Given the ASIN number of a specific product, display a list of all reviews for that product and display a list of all questions and answers about that product.
@@ -70,34 +65,30 @@ public class AmazonSearch {
         HashMap<String, ArrayList<Item>> qaMap = qaStructure.getAsinMap();
         ArrayList<Item> qas = qaMap.get(asin);
         printFindAsin(qas, reviewCount, qaCount);
-
     }
 
     /**
      * A method that prints out the review text and QA text.
      * @param items
      * @param reviewCount
+     * @param qaCount
      */
-    private List<String> printFindAsin(ArrayList<Item> items, int reviewCount, int qaCount) {
-        results = new CopyOnWriteArrayList<>();
-        if (items == null) {
-            System.out.println("no results for this part");
-        } else {
+    private void printFindAsin(ArrayList<Item> items, int reviewCount, int qaCount) {
+        if (items != null) {
             for (Item item : items) {
                 if (item instanceof Review review) {
                     reviewCount++;
+
                     results.add("review number: " + reviewCount);
-                    results.add("Review: " + review.getReviewText() + '\n');
+                    results.add("Review: " + review.getReviewText());
                 } else if (item instanceof QuestionAndAnswer qa) {
                     qaCount++;
                     results.add("QA number: " + qaCount);
                     results.add("Question: " + qa.getQuestion());
-                    results.add("Answer: " + qa.getAnswer() +'\n');
-
+                    results.add("Answer: " + qa.getAnswer());
                 }
             }
         }
-        return results;
     }
 
     /**
@@ -105,18 +96,19 @@ public class AmazonSearch {
      * @param term
      */
     private void reviewSearch(String term, DataStructures reviewStructures) {
-        results = new CopyOnWriteArrayList<>();
         int count = 0;
         List<Integer> list = reviewStructures.getIndex().exactSearch(term);
-        for (int id : list) {
-            Review review = (Review)reviewStructures.getDictionary().get(id);
-            count++;
-            results.add(count + ". " +review.getReviewText() + '\n');
+        if (!list.isEmpty()) {
+            for (int id : list) {
+                Review review = (Review)reviewStructures.getDictionary().get(id);
+                count++;
+                results.add(count + ". " +review.getReviewText());
+            }
+        } else {
+            results.add("No result for this search, please try again");
         }
+
     }
-
-
-
 
 
 
