@@ -1,21 +1,39 @@
 package chat;
 
+import com.google.gson.Gson;
 import framework.HTTPServer;
-//import com.slack.api.bolt.App;
-//import com.slack.api.bolt.AppConfig;
-//import com.slack.api.bolt.jetty.SlackAppServer;
-//import com.slack.api.methods.SlackApiException;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChatApplication {
-    public static String webHookUrl = "https://hooks.slack.com/services/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";
-    public static String URL = "https://slack.com/api/chat.postMessage?channel=cs601-project3";
-    public static String Token = "xoxb-2464212157-2674739062835-sgChwjJ1tMkw9zPF6M5uONMj";
-    public static String slackChannel = "cs601-project3";
 
     public static void main(String[] args) {
+        String url = "https://slack.com/api/chat.postMessage";
+        Gson gson = new Gson();
+
+        Token tokenObject = null;
+        try {
+            tokenObject = gson.fromJson(new FileReader("token.json"), Token.class);
+        } catch (FileNotFoundException fnf) {
+            fnf.printStackTrace();
+            System.exit(1);
+        }
         int port = 1024;
+
+        String token = tokenObject.getToken();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + token);
+
+        HTTPFetcher getChannelID = new HTTPFetcher();
+        String response = getChannelID.doGet("https://slack.com/api/conversations.list", headers);
+        System.out.println(response);
+        headers.put("channel", "C02KAM114UT");
+
         HTTPServer server = new HTTPServer(port);
-        server.addMapping("/chat", new ChatHandler(port, URL));
+        server.addMapping("/slackbot", new ChatHandler(port, url, headers));
         server.startUp();
     }
 }

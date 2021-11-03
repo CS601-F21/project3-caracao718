@@ -1,27 +1,19 @@
 package chat;
 
-import com.google.gson.Gson;
 import framework.Handler;
 import framework.HttpConstants;
 import framework.ServerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import search.FindConstants;
-import search.FindHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.Authenticator;
-import java.net.InetSocketAddress;
-import java.net.ProxySelector;
-import java.net.URLDecoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.HashSet;
+import java.util.Map;
+
 
 public class ChatHandler implements Handler {
     private String method;
@@ -32,19 +24,17 @@ public class ChatHandler implements Handler {
     private int contentLength;
     private JsonConfig config;
     private int port;
-    private String URL;
+    private String url;
+    private Map<String, String> headers;
 
-    public ChatHandler(int port, String URL) {
+    public ChatHandler(int port, String URL, Map<String, String> headers) {
         this.port = port;
-        this.URL = URL;
+        this.url = URL;
+        this.headers = headers;
     }
 
-    public synchronized void doGet() {
-        ServerUtils.send200(writer);
-        writer.println(ChatConstants.GET_CHAT_PAGE);
-    }
 
-    public synchronized void doPost() {
+    private synchronized String readInput() {
         char[] bodyArr = new char[contentLength];
         try {
             reader.read(bodyArr, 0, bodyArr.length);
@@ -67,32 +57,24 @@ public class ChatHandler implements Handler {
         LOGGER.info("Message body value: " + bodyValue);
         LOGGER.info("Message query: " + queryValue);
 
-        // post bodyValue to slack
-        Gson gson = new Gson();
-//        config = gson.fromJson(bodyValue, JsonConfig.class);
-        config = new JsonConfig(bodyValue);
-        System.out.println(config.toString());
+        return bodyValue;
+    }
 
-        HttpClient client = HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_1_1)
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .connectTimeout(Duration.ofSeconds(20))
-                .proxy(ProxySelector.of(new InetSocketAddress(URL, port)))
-                .authenticator(Authenticator.getDefault())
-                .build();
-//        HttpResponse<String> response = client.send(bodyValue, HttpResponse.BodyHandlers.ofString());
-//        System.out.println(response.statusCode());
-//        System.out.println(response.body());
-
-
-        LOGGER.info("JSON file created");
-        writer.println(ChatConstants.POST_MESSAGE_HEADER);
-        writer.println(config.toString());
-        LOGGER.info("Message post to slack");
-
-        // then return the same page ready for another get
+    public synchronized void doGet() {
         ServerUtils.send200(writer);
         writer.println(ChatConstants.GET_CHAT_PAGE);
+    }
+
+    public synchronized String doPost() {
+        String bodyValue = readInput();
+        HTTPFetcher fetcher = new HTTPFetcher(bodyValue, url, headers);
+        System.out.println(headers);
+        String response = fetcher.doPost();
+
+        // if success, else send status
+        writer.println(ChatConstants.GET_CHAT_PAGE);
+
+        return response;
     }
 
     @Override
