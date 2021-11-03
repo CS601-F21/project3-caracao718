@@ -6,6 +6,8 @@ import framework.ServerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.jmx.Server;
+import search.FindConstants;
+import utils.HandlerUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class ChatHandler implements Handler {
@@ -31,40 +34,20 @@ public class ChatHandler implements Handler {
         this.headers = headers;
     }
 
-
-    private synchronized String readInput() {
-        char[] bodyArr = new char[contentLength];
-        try {
-            reader.read(bodyArr, 0, bodyArr.length);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String body = new String(bodyArr);
-        LOGGER.info("Message body: " + body);
-
-
-        // need to handle if it's not query=term return 400 if query != query
-        String bodyValue = null;
-        String queryValue = null;
-        try {
-            bodyValue = URLDecoder.decode(body.substring(body.indexOf("=")+1, body.length()), StandardCharsets.UTF_8.toString());
-            queryValue = URLDecoder.decode(body.substring(0, body.indexOf("=")), StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        LOGGER.info("Message body value: " + bodyValue);
-        LOGGER.info("Message query: " + queryValue);
-
-        return bodyValue;
-    }
-
     public synchronized void doGet() {
         ServerUtils.send200(writer);
         writer.println(ChatConstants.GET_CHAT_PAGE);
     }
 
     public synchronized String doPost() {
-        String bodyValue = readInput();
+        String[] values = HandlerUtils.readInput(contentLength, reader);
+        String queryValue = values[1];
+        String bodyValue = values[0];
+
+        if (!Objects.equals(queryValue, ChatConstants.QUERY)) {
+            ServerUtils.send400(writer);
+        }
+
         JsonConfig config = new JsonConfig(bodyValue);
         LOGGER.info("json message: " + config.toString());
         HTTPFetcher fetcher = new HTTPFetcher(config.toString(), url, headers);

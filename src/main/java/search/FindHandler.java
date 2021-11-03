@@ -7,6 +7,7 @@ import framework.ServerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import project1.AmazonSearch;
+import utils.HandlerUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,27 +50,9 @@ public class FindHandler implements Handler {
     }
 
     public synchronized void doPost() {
-        char[] bodyArr = new char[contentLength];
-        try {
-            reader.read(bodyArr, 0, bodyArr.length);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String body = new String(bodyArr);
-        LOGGER.info("Message body: " + body);
-
-
-        String bodyValue = null;
-        String queryValue = null;
-        try {
-            bodyValue = URLDecoder.decode(body.substring(body.indexOf("=")+1, body.length()), StandardCharsets.UTF_8.toString());
-            queryValue = URLDecoder.decode(body.substring(0, body.indexOf("=")), StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        LOGGER.info("Message body value: " + bodyValue);
-        LOGGER.info("Message query: " + queryValue);
-
+        String[] values = HandlerUtils.readInput(contentLength, reader);
+        String queryValue = values[1];
+        String bodyValue = values[0];
         if (!Objects.equals(queryValue, FindConstants.QUERY)) {
             ServerUtils.send400(writer);
         } else {

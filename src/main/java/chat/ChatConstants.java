@@ -5,7 +5,7 @@ import framework.HttpConstants;
 public class ChatConstants {
     public static final String CHAT = "/slackbot";
 
-    public static final String QUERY = "query";
+    public static final String QUERY = "msg";
 
     public static final String PAGE_HEADER = HttpConstants.HTML_HEADER +
             "<head>\n" +
