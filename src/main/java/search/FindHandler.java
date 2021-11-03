@@ -16,6 +16,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class FindHandler implements Handler {
@@ -58,7 +59,6 @@ public class FindHandler implements Handler {
         LOGGER.info("Message body: " + body);
 
 
-        // need to handle if it's not query=term return 400 if query != query
         String bodyValue = null;
         String queryValue = null;
         try {
@@ -70,37 +70,23 @@ public class FindHandler implements Handler {
         LOGGER.info("Message body value: " + bodyValue);
         LOGGER.info("Message query: " + queryValue);
 
-//        if (!Objects.equals(queryValue, ReviewSearchConstants.QUERY)) {
-//            ServerUtils.send400(writer);
-//        } else {
-//            // do the reviewsearh in project 1, return the current results in HTML page
-//            List<String> reviewSearchResults = new CopyOnWriteArrayList<>(search.getResults(ReviewSearchConstants.REVIEW_SEARCH, bodyValue));
-//
-//            ServerUtils.send200(writer);
-//            writer.println(ReviewSearchConstants.PAGE_HEADER);
-//            writer.println("<h3>Messages</h3>\n");
-//            writer.println("<ul>\n");
-//            for(String result: reviewSearchResults) {
-//                writer.println("<li>" + result + "</li>\n");
-//            }
-//            writer.println("</ul>\n");
-//            writer.println(ReviewSearchConstants.REVIEW_SEARCH_BODY);
-//            writer.println(ReviewSearchConstants.PAGE_FOOTER);
-//        }
+        if (!Objects.equals(queryValue, FindConstants.QUERY)) {
+            ServerUtils.send400(writer);
+        } else {
+            List<String> findResults = new CopyOnWriteArrayList<>(search.getResults(FindConstants.FIND, bodyValue));
 
-        // do the reviewsearh in project 1, return the current results in HTML page
-        List<String> findResults = new CopyOnWriteArrayList<>(search.getResults(FindConstants.FIND, bodyValue));
-
-        ServerUtils.send200(writer);
-        writer.println(FindConstants.PAGE_HEADER);
-        writer.println("<h3>Messages</h3>\n");
-        writer.println("<ul>\n");
-        for(String result: findResults) {
-            writer.println("<li>" + result + "</li>\n");
+            ServerUtils.send200(writer);
+            writer.println(FindConstants.PAGE_HEADER);
+            writer.println("<h3>Messages</h3>\n");
+            writer.println("<ul>\n");
+            for(String result: findResults) {
+                writer.println("<li>" + result + "</li>\n");
+            }
+            writer.println("</ul>\n");
+            writer.println(FindConstants.FIND_BODY);
+            writer.println(FindConstants.PAGE_FOOTER);
         }
-        writer.println("</ul>\n");
-        writer.println(FindConstants.FIND_BODY);
-        writer.println(FindConstants.PAGE_FOOTER);
+
     }
 
 

@@ -74,7 +74,6 @@ public class ReviewSearchHandler implements Handler {
         LOGGER.info("Message body: " + body);
 
 
-        // need to handle if it's not query=term return 400 if query != query
         String bodyValue = null;
         String queryValue = null;
         try {
@@ -86,37 +85,22 @@ public class ReviewSearchHandler implements Handler {
         LOGGER.info("Message body value: " + bodyValue);
         LOGGER.info("Message query: " + queryValue);
 
-//        if (!Objects.equals(queryValue, ReviewSearchConstants.QUERY)) {
-//            ServerUtils.send400(writer);
-//        } else {
-//            // do the reviewsearh in project 1, return the current results in HTML page
-//            List<String> reviewSearchResults = new CopyOnWriteArrayList<>(search.getResults(ReviewSearchConstants.REVIEW_SEARCH, bodyValue));
-//
-//            ServerUtils.send200(writer);
-//            writer.println(ReviewSearchConstants.PAGE_HEADER);
-//            writer.println("<h3>Messages</h3>\n");
-//            writer.println("<ul>\n");
-//            for(String result: reviewSearchResults) {
-//                writer.println("<li>" + result + "</li>\n");
-//            }
-//            writer.println("</ul>\n");
-//            writer.println(ReviewSearchConstants.REVIEW_SEARCH_BODY);
-//            writer.println(ReviewSearchConstants.PAGE_FOOTER);
-//        }
+        if (!Objects.equals(queryValue, ReviewSearchConstants.QUERY)) {
+            ServerUtils.send400(writer);
+        } else {
+            List<String> reviewSearchResults = new CopyOnWriteArrayList<>(search.getResults(ReviewSearchConstants.REVIEW_SEARCH, bodyValue));
 
-        // do the reviewsearh in project 1, return the current results in HTML page
-        List<String> reviewSearchResults = new CopyOnWriteArrayList<>(search.getResults(ReviewSearchConstants.REVIEW_SEARCH, bodyValue));
-
-        ServerUtils.send200(writer);
-        writer.println(ReviewSearchConstants.PAGE_HEADER);
-        writer.println("<h3>Messages</h3>\n");
-        writer.println("<ul>\n");
-        for(String result: reviewSearchResults) {
-            writer.println("<li>" + result + "</li>\n");
+            ServerUtils.send200(writer);
+            writer.println(ReviewSearchConstants.PAGE_HEADER);
+            writer.println("<h3>Messages</h3>\n");
+            writer.println("<ul>\n");
+            for(String result: reviewSearchResults) {
+                writer.println("<li>" + result + "</li>\n");
+            }
+            writer.println("</ul>\n");
+            writer.println(ReviewSearchConstants.REVIEW_SEARCH_BODY);
+            writer.println(ReviewSearchConstants.PAGE_FOOTER);
         }
-        writer.println("</ul>\n");
-        writer.println(ReviewSearchConstants.REVIEW_SEARCH_BODY);
-        writer.println(ReviewSearchConstants.PAGE_FOOTER);
 
     }
 

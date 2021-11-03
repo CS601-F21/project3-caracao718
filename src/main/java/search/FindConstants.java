@@ -4,7 +4,7 @@ import framework.HttpConstants;
 
 public class FindConstants {
     public static final String FIND = "find";
-    public static final String QUERY = "query";
+    public static final String QUERY = "msg";
 
     public static final String PAGE_HEADER = HttpConstants.HTML_HEADER +
             "<head>\n" +
