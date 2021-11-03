@@ -31,9 +31,11 @@ public class ChatApplication {
         String response = getChannelID.doGet("https://slack.com/api/conversations.list", headers);
         System.out.println(response);
         headers.put("channel", "C02KAM114UT");
+        headers.put("Content-Type", "application/json");
 
         HTTPServer server = new HTTPServer(port);
-        server.addMapping("/slackbot", new ChatHandler(port, url, headers));
+        server.addMapping("/slackbot", new ChatHandler(url, headers));
         server.startUp();
+
     }
 }

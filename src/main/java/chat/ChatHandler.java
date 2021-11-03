@@ -5,6 +5,7 @@ import framework.HttpConstants;
 import framework.ServerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,13 +23,10 @@ public class ChatHandler implements Handler {
     private PrintWriter writer;
     private Logger LOGGER = LogManager.getLogger(ChatHandler.class);;
     private int contentLength;
-    private JsonConfig config;
-    private int port;
     private String url;
     private Map<String, String> headers;
 
-    public ChatHandler(int port, String URL, Map<String, String> headers) {
-        this.port = port;
+    public ChatHandler(String URL, Map<String, String> headers) {
         this.url = URL;
         this.headers = headers;
     }
@@ -67,14 +65,32 @@ public class ChatHandler implements Handler {
 
     public synchronized String doPost() {
         String bodyValue = readInput();
-        HTTPFetcher fetcher = new HTTPFetcher(bodyValue, url, headers);
-        System.out.println(headers);
+        JsonConfig config = new JsonConfig(bodyValue);
+        LOGGER.info("json message: " + config.toString());
+        HTTPFetcher fetcher = new HTTPFetcher(config.toString(), url, headers);
         String response = fetcher.doPost();
+        LOGGER.info("message sent to slack, page should show another textbox");
 
         // if success, else send status
-        writer.println(ChatConstants.GET_CHAT_PAGE);
+        if (postIsValid(response)) {
+            ServerUtils.send200(writer);
+            writer.println(ChatConstants.GET_CHAT_PAGE);
+        } else {
+            ServerUtils.send400(writer);
+        }
 
+        System.out.println(response);
         return response;
+    }
+
+    /**
+     * Validate if the response from Slack is success
+     * @param response
+     * @return
+     */
+    private synchronized boolean postIsValid(String response) {
+        char validationChar = response.charAt(6);
+        return validationChar == 't';
     }
 
     @Override

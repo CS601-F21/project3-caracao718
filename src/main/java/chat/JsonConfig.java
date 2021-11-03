@@ -14,7 +14,7 @@ public class JsonConfig {
     @Override
     public String toString() {
         return "{" +
-                "\"channel\":\"" + "cs601-project3" + '\"' +
+                "\"channel\":\"" + "cs601-project3" + '\"' + "," +
                 "\"text\":\"" + text + '\"' +
                 '}';
     }

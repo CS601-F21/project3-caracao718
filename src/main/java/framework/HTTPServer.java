@@ -112,6 +112,7 @@ public class HTTPServer {
 
                     currHandler.startApplication(writer, instream);
                 } else if (httpRequest.getPath().equals(HttpConstants.SHUT_DOWN)) {
+                    LOGGER.info("Shutting down the server");
                     shutDown(writer);
                 } else {
                     ServerUtils.send404(writer);

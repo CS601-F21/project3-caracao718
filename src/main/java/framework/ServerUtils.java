@@ -43,6 +43,10 @@ public class ServerUtils {
         writer.printf("%s \r\n\r\n", HttpConstants.CONNECTION_CLOSE);
     }
 
+    /**
+     * Send the status line of an HTTP 411 Length Required response.
+     * @param writer
+     */
     public static void send411(PrintWriter writer) {
         writer.printf("%s %s\r\n", HttpConstants.VERSION, HttpConstants.LENGTH_REQUIRED);
         writer.printf("%s \r\n\r\n", HttpConstants.CONNECTION_CLOSE);
