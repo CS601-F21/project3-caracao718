@@ -19,7 +19,7 @@ public class DataStructures {
      * @param docID
      * @param item
      */
-    public void addDictionary(int docID, Item item) {
+    public synchronized void addDictionary(int docID, Item item) {
         dictionary.put(docID, item);
     }
 
@@ -29,7 +29,7 @@ public class DataStructures {
      * @param asin
      * @param item
      */
-    public void addAsinMap(String asin, Item item) {
+    public synchronized void addAsinMap(String asin, Item item) {
         if (asinMap.containsKey(asin)) {
             ArrayList<Item> list = asinMap.get(asin);
             list.add(item);
@@ -46,7 +46,7 @@ public class DataStructures {
      * A getter to retrieve the dictionary HashMap. Key is the docID, and value is an Item object
      * @return HashMap
      */
-    public HashMap<Integer, Item> getDictionary() {
+    public synchronized HashMap<Integer, Item> getDictionary() {
         return dictionary;
     }
 
@@ -54,13 +54,13 @@ public class DataStructures {
      * A getter to retrieve the invertedIndex.
      * @return HashMap
      */
-    public InvertedIndex getIndex() { return index; }
+    public synchronized InvertedIndex getIndex() { return index; }
 
     /**
      * A getter to retrieve the asinMap.
      * @return HashMap
      */
-    public HashMap<String, ArrayList<Item>> getAsinMap() { return asinMap; }
+    public synchronized HashMap<String, ArrayList<Item>> getAsinMap() { return asinMap; }
 
 
     /**
@@ -68,7 +68,7 @@ public class DataStructures {
      * @param input
      * @param id
      */
-    public void tokenizeString(String input, int id) {
+    public synchronized void tokenizeString(String input, int id) {
         String[] output = input.split("\\s");
         for (int i = 0; i < output.length; i++) {
             output[i] = output[i].replaceAll("\\p{Punct}", "");

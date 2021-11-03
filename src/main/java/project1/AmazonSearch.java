@@ -40,7 +40,7 @@ public class AmazonSearch {
      * A method that takes input commands from the command line, and execute the program accordingly.
      * @param reviewStructures
      */
-    private void executeCommand(DataStructures reviewStructures, DataStructures qaStructures, String searchType, String input, CopyOnWriteArrayList<String> results) {
+    private synchronized void executeCommand(DataStructures reviewStructures, DataStructures qaStructures, String searchType, String input, CopyOnWriteArrayList<String> results) {
         switch (searchType) {
             case "find" -> findAsin(input, reviewStructures, qaStructures, results);
             case "reviewsearch" -> reviewSearch(input, reviewStructures, results);
@@ -54,7 +54,7 @@ public class AmazonSearch {
      * Given the ASIN number of a specific product, display a list of all reviews for that product and display a list of all questions and answers about that product.
      * @param asin
      */
-    private void findAsin(String asin, DataStructures reviewStructure, DataStructures qaStructure, CopyOnWriteArrayList<String> results) {
+    private synchronized void findAsin(String asin, DataStructures reviewStructure, DataStructures qaStructure, CopyOnWriteArrayList<String> results) {
         int reviewCount = 0;
         int qaCount = 0;
         HashMap<String, ArrayList<Item>> reviewMap = reviewStructure.getAsinMap();
@@ -72,7 +72,7 @@ public class AmazonSearch {
      * @param reviewCount
      * @param qaCount
      */
-    private void printFindAsin(ArrayList<Item> items, int reviewCount, int qaCount, CopyOnWriteArrayList<String> results) {
+    private synchronized void printFindAsin(ArrayList<Item> items, int reviewCount, int qaCount, CopyOnWriteArrayList<String> results) {
         if (items != null) {
             for (Item item : items) {
                 if (item instanceof Review review) {
@@ -94,7 +94,7 @@ public class AmazonSearch {
      * Given a one-word term, display a list of all reviews that contain the exact term. Results are sorted by term frequency
      * @param term
      */
-    private void reviewSearch(String term, DataStructures reviewStructures, CopyOnWriteArrayList<String> results) {
+    private synchronized void reviewSearch(String term, DataStructures reviewStructures, CopyOnWriteArrayList<String> results) {
         int count = 0;
         List<Integer> list = reviewStructures.getIndex().exactSearch(term);
         if (!list.isEmpty()) {

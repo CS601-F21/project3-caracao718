@@ -26,7 +26,7 @@ public class FileReader {
      * A method that reads in the review file, and stores the JSON values in asinReviewMap, reviewDictionary, and the reviewIndex.
      * @return InvertedIndex
      */
-    public DataStructures readReviewFile() {
+    public synchronized DataStructures readReviewFile() {
         DataStructures reviewStructure = new DataStructures();
         int docId = 0;
         String line;
@@ -52,7 +52,7 @@ public class FileReader {
      * A method that reads in the QA file, and stores the JSON values in asinQaMap, qaDictionary, and the qaIndex.
      * @return InvertedIndex
      */
-    public DataStructures readQaFile() {
+    public synchronized DataStructures readQaFile() {
         DataStructures qaStructure = new DataStructures();
         int docId = 0;
         String line;

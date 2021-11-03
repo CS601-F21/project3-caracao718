@@ -8,6 +8,8 @@ public class HttpConstants {
     public static final String POST = "POST";
     public static final String VERSION = "HTTP/1.1";
 
+    public static final String SHUT_DOWN = "/shutdown";
+
     public static final String OK = "200 OK";
     public static final String NOT_FOUND = "404 Not Found";
     public static final String NOT_ALLOWED = "405 Method Not Allowed";
@@ -33,4 +35,13 @@ public class HttpConstants {
             "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";
     public static final String HTML_FOOTER = "</body>\n" +
             "</html>";
+
+    public static final String SHUT_DOWN_PAGE = HTML_HEADER +
+            "<head>\n" +
+            "  <title>Server Stopped</title>\n" +
+            "</head>\n" +
+            "<body>\n" +
+            "\n" +
+            "  <p>The resource you are looking for was not found.</p>\n" +
+            "\n" + HTML_FOOTER;
 }

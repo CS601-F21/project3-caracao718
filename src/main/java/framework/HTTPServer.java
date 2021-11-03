@@ -38,8 +38,15 @@ public class HTTPServer {
     /**
      * Server stop accepting new connections
      */
-    public void shutDown() {
+    public void shutDown(PrintWriter writer) {
         running = false;
+//        try {
+//            wait(3000);
+//            writer.println(HttpConstants.SHUT_DOWN_PAGE);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        System.exit(0);
     }
 
     /**
@@ -104,6 +111,8 @@ public class HTTPServer {
                     }
 
                     currHandler.startApplication(writer, instream);
+                } else if (httpRequest.getPath().equals(HttpConstants.SHUT_DOWN)) {
+                    shutDown(writer);
                 } else {
                     ServerUtils.send404(writer);
                 }
