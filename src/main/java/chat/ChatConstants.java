@@ -2,6 +2,9 @@ package chat;
 
 import framework.HttpConstants;
 
+/**
+ * A helper class to store various constants used for the HTTP server.
+ */
 public class ChatConstants {
     public static final String CHAT = "/slackbot";
 

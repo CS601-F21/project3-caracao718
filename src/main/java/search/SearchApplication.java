@@ -10,7 +10,7 @@ public class SearchApplication {
     public static void main(String[] args) {
         AmazonSearch search = new AmazonSearch();
 
-        int port = 1024;
+        int port = 8080;
         HTTPServer server = new HTTPServer(port);
         LOGGER.info("listening");
         server.addMapping("/find", new FindHandler(search));

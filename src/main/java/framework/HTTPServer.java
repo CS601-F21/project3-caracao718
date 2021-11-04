@@ -8,11 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
+/**
+ * A multithreaded server that is a framework for web applications.
+ */
 public class HTTPServer {
     private final int port;
     private volatile boolean running;
@@ -20,10 +23,8 @@ public class HTTPServer {
     private final int threadPoolSize = 30;
     private static final Logger LOGGER = LogManager.getLogger(HTTPServer.class);
 
-
     private Map<String, Handler> mappings = new HashMap<>();
-
-     private ServerSocket serverSocket = null;
+    private ServerSocket serverSocket = null;
 
     /**
      * The constructor for creating an HTTP server
@@ -39,13 +40,7 @@ public class HTTPServer {
      * Server stop accepting new connections
      */
     public void shutDown(PrintWriter writer) {
-        running = false;
-//        try {
-//            wait(3000);
-//            writer.println(HttpConstants.SHUT_DOWN_PAGE);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        threadPool.shutdown();
         System.exit(0);
     }
 
@@ -113,6 +108,7 @@ public class HTTPServer {
                     currHandler.startApplication(writer, instream);
                 } else if (httpRequest.getPath().equals(HttpConstants.SHUT_DOWN)) {
                     LOGGER.info("Shutting down the server");
+                    running = false;
                     shutDown(writer);
                 } else {
                     ServerUtils.send404(writer);

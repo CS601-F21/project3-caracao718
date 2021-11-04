@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-
+/**
+ * A class that enables search in the two file from amazon data
+ */
 public class AmazonSearch {
     private final String review_file_name = "Cell_Phones_and_Accessories_5.json";
     private final String qa_file_name = "qa_Cell_Phones_and_Accessories.json";
@@ -21,6 +23,9 @@ public class AmazonSearch {
     private final DataStructures reviewStructures;
     private final DataStructures qaStructures;
 
+    /**
+     * A constructor to start a AmazonSearch
+     */
     public AmazonSearch() {
         reviewReader = new FileReader(review_file_name);
         reviewStructures = reviewReader.readReviewFile();
@@ -29,7 +34,12 @@ public class AmazonSearch {
         qaStructures = qaReader.readQaFile();
     }
 
-
+    /**
+     * A method that returns the results from AmazonSearch
+     * @param searchType
+     * @param input
+     * @return
+     */
     public CopyOnWriteArrayList<String> getResults(String searchType, String input) {
         CopyOnWriteArrayList<String> results = new CopyOnWriteArrayList<>();
         executeCommand(reviewStructures, qaStructures, searchType, input, results);

@@ -5,16 +5,10 @@ import framework.HttpConstants;
 import framework.ServerUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.jmx.Server;
-import search.FindConstants;
 import utils.HandlerUtils;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
 
@@ -50,7 +44,7 @@ public class ChatHandler implements Handler {
 
         JsonConfig config = new JsonConfig(bodyValue);
         LOGGER.info("json message: " + config.toString());
-        HTTPFetcher fetcher = new HTTPFetcher(config.toString(), url, headers);
+        ChatFetcher fetcher = new ChatFetcher(config.toString(), url, headers);
         String response = fetcher.doPost();
         LOGGER.info("message sent to slack, page should show another textbox");
 

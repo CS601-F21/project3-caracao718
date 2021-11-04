@@ -9,10 +9,18 @@ import java.nio.charset.StandardCharsets;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
+/**
+ * A helper class to factor out the common method among all handlers
+ */
 public class HandlerUtils {
     private static Logger LOGGER = LogManager.getLogger(HandlerUtils.class);
 
+    /**
+     * A method that reads input from the textbox
+     * @param contentLength
+     * @param reader
+     * @return
+     */
     public static synchronized String[] readInput(int contentLength, BufferedReader reader) {
         char[] bodyArr = new char[contentLength];
         try {

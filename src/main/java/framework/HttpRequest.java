@@ -9,6 +9,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class that reads in the request from client
+ */
 public class HttpRequest {
     private String method;
     private String path;
@@ -20,6 +23,11 @@ public class HttpRequest {
     private List<String> headers;
 
 
+    /**
+     * A constructor for creating an HTTP request
+     * @param writer
+     * @param instream
+     */
     public HttpRequest(PrintWriter writer, BufferedReader instream) {
         this.instream = instream;
         this.writer = writer;
@@ -36,14 +44,26 @@ public class HttpRequest {
         LOGGER.debug("Http Version: " + version);
     }
 
+    /**
+     * A getter method to get the method
+     * @return
+     */
     public String getMethod() {
         return method;
     }
 
+    /**
+     * A getter method to get the path
+     * @return
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * A getter method to get the content length
+     * @return
+     */
     public int getContentLength() {
         contentLength = 0;
         headers = new ArrayList<>();
@@ -68,6 +88,10 @@ public class HttpRequest {
         return contentLength;
     }
 
+    /**
+     * Reads in a line of request from the client
+     * @return
+     */
     private String readLine() {
         try {
             return instream.readLine();
@@ -77,6 +101,9 @@ public class HttpRequest {
         return null;
     }
 
+    /**
+     * Validate the method from client
+     */
     public void validMethod() {
         if (!method.equals(HttpConstants.GET) && !method.equals(HttpConstants.POST)) {
             // bad request

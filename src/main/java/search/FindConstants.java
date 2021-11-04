@@ -2,6 +2,9 @@ package search;
 
 import framework.HttpConstants;
 
+/**
+ * A helper class to store various constants used for the HTTP server.
+ */
 public class FindConstants {
     public static final String FIND = "find";
     public static final String QUERY = "msg";

@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * A helper class to store various constants used for the HTTP server.
+ */
 public class ReviewSearchHandler implements Handler {
     private String method;
     private BufferedReader reader;
