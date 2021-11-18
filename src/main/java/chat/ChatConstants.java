@@ -29,7 +29,14 @@ public class ChatConstants {
             "</form>\n" +
             PAGE_FOOTER;
 
-
+    public static final String GET_ERROR_PAGE = PAGE_HEADER +
+            "<h3>Something went wrong, please try again</h3>\n" +
+            "<form action=\"/slackbot\" method=\"post\">\n" +
+            "  <label for=\"msg\">Message:</label><br/>\n" +
+            "  <input type=\"text\" id=\"msg\" name=\"msg\"/><br/>\n" +
+            "  <input type=\"submit\" value=\"Submit\"/>\n" +
+            "</form>\n" +
+            PAGE_FOOTER;
     public static final String RETURN_EMPTY_CHAT_PAGE = PAGE_HEADER +
             "<form action=\"/slackbot\" method=\"post\">\n" +
             "  <label for=\"msg\">try again:</label><br/>\n" +

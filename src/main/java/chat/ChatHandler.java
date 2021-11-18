@@ -28,25 +28,26 @@ public class ChatHandler implements Handler {
         this.headers = headers;
     }
 
-    public synchronized void doGet() {
+    public void doGet() {
         ServerUtils.send200(writer);
         writer.println(ChatConstants.GET_CHAT_PAGE);
     }
 
-    public synchronized String doPost() {
+    public String doPost() {
         String[] values = HandlerUtils.readInput(contentLength, reader);
         String queryValue = values[1];
         String bodyValue = values[0];
 
         if (!Objects.equals(queryValue, ChatConstants.QUERY)) {
             ServerUtils.send400(writer);
+            writer.println(ChatConstants.GET_ERROR_PAGE);
         }
 
         JsonConfig config = new JsonConfig(bodyValue);
         LOGGER.info("json message: " + config.toString());
         ChatFetcher fetcher = new ChatFetcher(config.toString(), url, headers);
         String response = fetcher.doPost();
-        LOGGER.info("message sent to slack, page should show another textbox");
+        LOGGER.info("message sent to slack, page should show another text box");
 
         // if success, else send status
         if (postIsValid(response)) {
@@ -54,6 +55,7 @@ public class ChatHandler implements Handler {
             writer.println(ChatConstants.GET_CHAT_PAGE);
         } else {
             ServerUtils.send400(writer);
+            writer.println(ChatConstants.GET_ERROR_PAGE);
         }
 
         System.out.println(response);
@@ -65,7 +67,7 @@ public class ChatHandler implements Handler {
      * @param response
      * @return
      */
-    private synchronized boolean postIsValid(String response) {
+    private boolean postIsValid(String response) {
         char validationChar = response.charAt(6);
         return validationChar == 't';
     }

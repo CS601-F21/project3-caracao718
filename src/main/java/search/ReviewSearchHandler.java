@@ -57,7 +57,7 @@ public class ReviewSearchHandler implements Handler {
     /**
      * Do a GET method
      */
-    public synchronized void doGet() {
+    public void doGet() {
         ServerUtils.send200(writer);
         // send the HTML page
         writer.println(ReviewSearchConstants.GET_REVIEW_SEARCH_PAGE);
@@ -66,7 +66,7 @@ public class ReviewSearchHandler implements Handler {
     /**
      * Do a POST method
      */
-    private synchronized void doPost() {
+    private void doPost() {
 
         String[] values = HandlerUtils.readInput(contentLength, reader);
         String queryValue = values[1];
@@ -74,6 +74,10 @@ public class ReviewSearchHandler implements Handler {
 
         if (!Objects.equals(queryValue, ReviewSearchConstants.QUERY)) {
             ServerUtils.send400(writer);
+            writer.println(ReviewSearchConstants.PAGE_HEADER);
+            writer.println("Something wrong with the input, please try again");
+            writer.println(ReviewSearchConstants.REVIEW_SEARCH_BODY);
+            writer.println(ReviewSearchConstants.PAGE_FOOTER);
         } else {
             List<String> reviewSearchResults = new CopyOnWriteArrayList<>(search.getResults(ReviewSearchConstants.REVIEW_SEARCH, bodyValue));
 
