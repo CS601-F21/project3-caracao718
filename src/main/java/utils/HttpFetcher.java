@@ -23,6 +23,7 @@ public class HttpFetcher {
     private Map<String, String> headers;
     private HttpResponse<String> getResponse;
     private HttpResponse<String> postResponse;
+    private HttpResponse<String> deleteResponse;
 
     public HttpFetcher(String url, String body, Map<String, String> headers) {
         this.url = url;
@@ -31,6 +32,8 @@ public class HttpFetcher {
 
         getResponse = doGet(url, headers);
         postResponse = doPost(url, headers, body);
+
+        deleteResponse = doDelete(url, headers, body);
     }
 
     public HttpResponse<String> getPostResponse() {
@@ -39,6 +42,10 @@ public class HttpFetcher {
 
     public HttpResponse<String> getGetResponse() {
         return getResponse;
+    }
+
+    public HttpResponse<String> getDeleteResponse() {
+        return deleteResponse;
     }
 
     /**
@@ -105,6 +112,23 @@ public class HttpFetcher {
 
     }
 
+    public static HttpResponse<String> doDelete(String url, Map<String, String> headers, String body) {
+        try {
+            HttpRequest.Builder builder = HttpRequest.newBuilder(new URI(url));
+            builder = setHeaders(builder, headers);
+            HttpRequest request = builder.DELETE()
+                    .build();
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response);
+            return response;
+
+        } catch(URISyntaxException | IOException | InterruptedException e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
     /**
      * Helper method to set the headers of any HttpRequest.Builder.
      * @param builder
@@ -122,15 +146,19 @@ public class HttpFetcher {
 
     public static void main(String[] args) {
 
-//        HttpFetcher fetcher = new HttpFetcher("http://localhost:8080/reviewsearch", "hi", null);
+        HttpFetcher fetcher = new HttpFetcher("http://localhost:8080/reviewsearch", "hi", null);
 
-        String url = "http://localhost:8080/reviewsearch";
-        HttpResponse<String> response = doGet(url);
-
-        HttpResponse<String> postResponse = doPost(url, null, "msg=here is a message");
-        System.out.println(postResponse);
-        assert postResponse != null;
-        System.out.println(HtmlValidator.isValid(postResponse.body()));
+//        String url = "http://localhost:8080/reviewsearch";
+//        HttpResponse<String> response = doGet(url);
+//        HttpResponse<String> deleteResponse = doDelete(url, null, "delete");
+//
+//        HttpResponse<String> postResponse = doPost(url, null, "notmsg=here is a message");
+////        HttpResponse<String> postResponse = doPut(url, null, "msg=here is a message");
+////        System.out.println(deleteResponse);
+//        assert postResponse != null;
+//        System.out.println(deleteResponse.headers().toString());
+//        System.out.println(deleteResponse.body());
+//        System.out.println(HtmlValidator.isValid(deleteResponse.body()));
 
 //        Gson gson = new Gson();
 //

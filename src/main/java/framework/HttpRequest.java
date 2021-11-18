@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class that reads in the request from client
@@ -38,6 +39,9 @@ public class HttpRequest {
         this.method = requestLineParts[0];
         this.path = requestLineParts[1];
         this.version = requestLineParts[2];
+        if (validMethod()) {
+            contentLength = findContentLength();
+        }
 
         LOGGER.debug("Http Method: " + method);
         LOGGER.debug("Path: " + path);
@@ -60,11 +64,15 @@ public class HttpRequest {
         return path;
     }
 
+    public int getContentLength() {
+        return contentLength;
+    }
+
     /**
      * A getter method to get the content length
      * @return
      */
-    public int getContentLength() {
+    private int findContentLength() {
         contentLength = 0;
         headers = new ArrayList<>();
         String header;
@@ -81,9 +89,11 @@ public class HttpRequest {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-        if (contentLength == 0) {
-            // bad request
+        if (contentLength == 0 && Objects.equals(method, "POST")) {
+            // length required
             ServerUtils.send411(writer);
+            writer.println(HttpConstants.LENGTH_REQUIRED_PAGE);
+            return 0;
         }
         return contentLength;
     }
@@ -104,13 +114,16 @@ public class HttpRequest {
     /**
      * Validate the method from client
      */
-    public void validMethod() {
+    public boolean validMethod() {
         if (!method.equals(HttpConstants.GET) && !method.equals(HttpConstants.POST)) {
             // bad request
+            LOGGER.info("method is not valid");
             ServerUtils.send405(writer);
-            // continue finishing the thread
-        } else {
-            LOGGER.info("method is valid");
+            writer.println(HttpConstants.METHOD_NOT_ALLOWED_PAGE);
+            return false;
         }
+
+        LOGGER.info("method is valid");
+        return true;
     }
 }

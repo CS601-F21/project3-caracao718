@@ -31,7 +31,6 @@ public class ServerUtils {
     public static void send404(PrintWriter writer) {
         writer.printf("%s %s\r\n", HttpConstants.VERSION, HttpConstants.NOT_FOUND);
         writer.printf("%s \r\n\r\n", HttpConstants.CONNECTION_CLOSE);
-        writer.println(HttpConstants.NOT_FOUND_PAGE);
     }
 
     /**

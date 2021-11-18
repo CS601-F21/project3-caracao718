@@ -33,7 +33,7 @@ public class ChatHandler implements Handler {
         writer.println(ChatConstants.GET_CHAT_PAGE);
     }
 
-    public String doPost() {
+    public void doPost() {
         String[] values = HandlerUtils.readInput(contentLength, reader);
         String queryValue = values[1];
         String bodyValue = values[0];
@@ -41,6 +41,7 @@ public class ChatHandler implements Handler {
         if (!Objects.equals(queryValue, ChatConstants.QUERY)) {
             ServerUtils.send400(writer);
             writer.println(ChatConstants.GET_ERROR_PAGE);
+            return;
         }
 
         JsonConfig config = new JsonConfig(bodyValue);
@@ -59,7 +60,6 @@ public class ChatHandler implements Handler {
         }
 
         System.out.println(response);
-        return response;
     }
 
     /**
