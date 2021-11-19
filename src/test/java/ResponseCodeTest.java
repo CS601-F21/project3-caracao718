@@ -1,9 +1,5 @@
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 import utils.HttpFetcher;
-import utils.HttpFetcher_Sami;
-
-import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

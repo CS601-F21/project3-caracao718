@@ -1,14 +1,8 @@
 import framework.HttpRequest;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
-import utils.HttpFetcher;
-import utils.HttpFetcher_Sami;
 
 import java.io.*;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
