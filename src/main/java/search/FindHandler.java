@@ -44,17 +44,21 @@ public class FindHandler implements Handler {
         }
     }
 
-    public synchronized void doGet() {
+    public void doGet() {
         ServerUtils.send200(writer);
         writer.println(FindConstants.GET_FIND_PAGE);
     }
 
-    public synchronized void doPost() {
+    public void doPost() {
         String[] values = HandlerUtils.readInput(contentLength, reader);
         String queryValue = values[1];
         String bodyValue = values[0];
         if (!Objects.equals(queryValue, FindConstants.QUERY)) {
             ServerUtils.send400(writer);
+            writer.println(FindConstants.PAGE_HEADER);
+            writer.println("<h3>Something went wrong with the input, please try again</h3>");
+            writer.println(FindConstants.FIND_BODY);
+            writer.println(FindConstants.PAGE_FOOTER);
         } else {
             List<String> findResults = new CopyOnWriteArrayList<>(search.getResults(FindConstants.FIND, bodyValue));
 

@@ -36,6 +36,30 @@ public class HttpConstants {
     public static final String HTML_FOOTER = "</body>\n" +
             "</html>";
 
+    public static final String LENGTH_REQUIRED_PAGE = "<!DOCTYPE html>\n" +
+            "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" +
+            "<head>\n" +
+            "  <title>Length Required</title>\n" +
+            "</head>\n" +
+            "<body>\n" +
+            "\n" +
+            "  <p>Content Length required in the headers.</p>\n" +
+            "\n" +
+            "</body>\n" +
+            "</html>";
+
+    public static final String METHOD_NOT_ALLOWED_PAGE = "<!DOCTYPE html>\n" +
+            "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" +
+            "<head>\n" +
+            "  <title>Method not Allowed</title>\n" +
+            "</head>\n" +
+            "<body>\n" +
+            "\n" +
+            "  <p>Method is not allowed.</p>\n" +
+            "\n" +
+            "</body>\n" +
+            "</html>";
+
     public static final String SHUT_DOWN_PAGE = HTML_HEADER +
             "<head>\n" +
             "  <title>Server Stopped</title>\n" +

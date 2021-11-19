@@ -91,7 +91,6 @@ public class HTTPServer {
                     PrintWriter writer = new PrintWriter(socket.getOutputStream())
             ) {
                 HttpRequest httpRequest = new HttpRequest(writer, instream);
-                httpRequest.validMethod();
 
                 if (mappings.containsKey(httpRequest.getPath())) {
                     Handler currHandler = mappings.get(httpRequest.getPath());
@@ -104,14 +103,16 @@ public class HTTPServer {
                     } else {
                         currHandler.setContentLength(0);
                     }
-
                     currHandler.startApplication(writer, instream);
                 } else if (httpRequest.getPath().equals(HttpConstants.SHUT_DOWN)) {
                     LOGGER.info("Shutting down the server");
                     running = false;
                     shutDown(writer);
                 } else {
+                    LOGGER.info("page not found");
                     ServerUtils.send404(writer);
+                    writer.println(HttpConstants.NOT_FOUND_PAGE);
+
                 }
 
             } catch (IOException ioe) {

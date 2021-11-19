@@ -44,7 +44,7 @@ public class ReviewSearchHandler implements Handler {
      * @param writer
      * @param reader
      */
-    public synchronized void startApplication(PrintWriter writer, BufferedReader reader) {
+    public void startApplication(PrintWriter writer, BufferedReader reader) {
         this.writer = writer;
         this.reader = reader;
         if (method.equals(HttpConstants.GET)) {
@@ -57,7 +57,7 @@ public class ReviewSearchHandler implements Handler {
     /**
      * Do a GET method
      */
-    public synchronized void doGet() {
+    public void doGet() {
         ServerUtils.send200(writer);
         // send the HTML page
         writer.println(ReviewSearchConstants.GET_REVIEW_SEARCH_PAGE);
@@ -66,7 +66,7 @@ public class ReviewSearchHandler implements Handler {
     /**
      * Do a POST method
      */
-    private synchronized void doPost() {
+    private void doPost() {
 
         String[] values = HandlerUtils.readInput(contentLength, reader);
         String queryValue = values[1];
@@ -74,6 +74,10 @@ public class ReviewSearchHandler implements Handler {
 
         if (!Objects.equals(queryValue, ReviewSearchConstants.QUERY)) {
             ServerUtils.send400(writer);
+            writer.println(ReviewSearchConstants.PAGE_HEADER);
+            writer.println("<h3>Something wrong with the input, please try again</h3>\n");
+            writer.println(ReviewSearchConstants.REVIEW_SEARCH_BODY);
+            writer.println(ReviewSearchConstants.PAGE_FOOTER);
         } else {
             List<String> reviewSearchResults = new CopyOnWriteArrayList<>(search.getResults(ReviewSearchConstants.REVIEW_SEARCH, bodyValue));
 
@@ -93,29 +97,29 @@ public class ReviewSearchHandler implements Handler {
 
 
     @Override
-    public synchronized void setPath(String path) {
+    public void setPath(String path) {
         this.path = path;
     }
 
     @Override
-    public synchronized void setMethod(String method) {
+    public void setMethod(String method) {
         this.method = method;
     }
 
     @Override
-    public synchronized void setReader(BufferedReader reader) {
+    public void setReader(BufferedReader reader) {
         this.reader = reader;
     }
 
     @Override
-    public synchronized void setWriter(PrintWriter writer) {
+    public void setWriter(PrintWriter writer) {
         this.writer = writer;
     }
 
 
 
     @Override
-    public synchronized void setContentLength(int contentLength) {
+    public void setContentLength(int contentLength) {
         this.contentLength = contentLength;
     }
 }
