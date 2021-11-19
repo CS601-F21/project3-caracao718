@@ -4,9 +4,6 @@ import org.junit.jupiter.api.Test;
 import project1.AmazonSearch;
 import search.FindConstants;
 import search.ReviewSearchConstants;
-import search.ReviewSearchHandler;
-import utils.HttpFetcher;
-import utils.HttpFetcher_Sami;
 
 import java.io.BufferedReader;
 import java.io.IOException;

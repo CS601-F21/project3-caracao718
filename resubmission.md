@@ -67,6 +67,46 @@ with the actual HTML response from the server.
 
 ## Part 2 - Integration Tests
 
+Tested three flows in the HttpRequest class.
+The integrationTest.txt file contains the test sample code.
+
+#### Test the constructor calling findContentLength method
+
+```
+    @RepeatedTest(2)
+    void testContentLength() throws URISyntaxException, IOException, InterruptedException {
+        HttpRequest request = new HttpRequest(new PrintWriter(System.out), new BufferedReader(new FileReader("src/test/integrationTest.txt")));
+        assertEquals(2, request.getContentLength());
+    }
+```
+
+This is an integration test that tests the performance of the HttpRequest class constructor calling the findContentLength method.
+The Content-Length specified in the .txt file is 2. So, I compared the test result and the expected value: 2.
+
+#### Test the constructor calling validMethod method
+
+```
+    @RepeatedTest(2)
+    void testValidMethod() throws FileNotFoundException {
+        HttpRequest request = new HttpRequest(new PrintWriter(System.out), new BufferedReader(new FileReader("src/test/integrationTest.txt")));
+        assertTrue(request.validMethod());
+    }
+```
+This is an integration test that tests the performance of the HttpRequest class constructor calling the validMethod method.
+The method specified in the .txt file is POST. So, as long as the method is POST or GET, validMethod method should return true.
+
+#### Test the constructor calling readline method
+
+```
+    @RepeatedTest(2)
+    void testReadLine() throws FileNotFoundException {
+        HttpRequest request = new HttpRequest(new PrintWriter(System.out), new BufferedReader(new FileReader("src/test/integrationTest.txt")));
+        assertEquals("POST", request.getMethod());
+    }
+```
+This is an integration test that tests the performance of the HttpRequest class constructor calling the readLine method.
+Whether the readLine method works can be determined by whether the method field is equal to the test value in integration.txt file.
+The method specified in the .txt file is POST. So, I compared the test result and the expected value: POST.
 
 
 ## Part 3 - System Tests
