@@ -13,7 +13,6 @@ public class ResponseCodeTest {
     void testSearchStatusCode400() {
         String url = "http://localhost:8080/reviewsearch";
         HttpFetcher fetcher = new HttpFetcher(url, "notmsg=hi", null);
-//        System.out.println(fetcher.getPostResponse().body());
         assertEquals(400, fetcher.getPostResponse().statusCode());
     }
 
