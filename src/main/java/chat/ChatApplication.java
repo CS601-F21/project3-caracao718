@@ -34,9 +34,6 @@ public class ChatApplication {
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + token);
 
-        headers.put("channel", "C02KAM114UT");
-        headers.put("Content-Type", "application/json");
-
         HTTPServer server = new HTTPServer(port);
         server.addMapping("/slackbot", new ChatHandler(url, headers));
         server.startUp();
